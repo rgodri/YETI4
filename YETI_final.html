@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        /* Basic CSS for layout and styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #444;
+        }
+
+        nav a {
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        nav a:hover {
+            background-color: #555;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            flex-wrap: wrap;  /* Allow the blocks to wrap on smaller screens */
+        }
+
+        .block {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;  /* Two blocks side by side on larger screens */
+            padding: 15px;
+            box-sizing: border-box;
+            margin-right: 2%;  /* Space between blocks */
+        }
+
+        .block:last-child {
+            margin-right: 0;  /* Remove margin on the last block */
+        }
+
+        .block h3 {
+            color: #333;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+        }
+
+        .tab-content {
+            display: none;
+            width: 100%;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        
+        /* Countdown timer styles */
+        .timer-container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            margin: 0 auto;
+        }
+
+        .circle {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 10px solid #ddd;
+            margin: 0 auto;
+        }
+        
+        .circle .background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #f0f0f0;
+        }
+
+        .circle .progress {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#4caf50 0%, #4caf50 0%, transparent 0% 100%);
+            clip-path: circle(50% at 50% 50%);
+            transition: background 0.1s linear;
+        }
+
+        .timer-display {
+            font-size: 40px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+        }
+        
+        .timer-controls button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .timer-controls button:hover {
+            background-color: #45a049;
+        }
+
+        .time-inputs {
+            margin: 10px 0;
+        }
+
+        .time-input {
+            padding: 5px;
+            font-size: 16px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 500px; /* Adjust the height as per your preference */
+            border: none;
+        }
+
+        /* Media Query for small screens (mobile) */
+        @media (max-width: 768px) {
+            .block {
+                width: 100%;  /* Make blocks full width on smaller screens */
+                margin-right: 0;  /* Remove right margin */
+            }
+        }
+        /* Media Query for larger screens (laptop/desktop) */
+        @media (min-width: 1000px) {
+            .block {
+                width: 48%;
+                float: left;
+            }
+        }
+
+        /* Cat container */
+        .cat {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: auto;
+            margin-bottom: 20px; /* Space between the cat and button */
+        }
+
+        /* Cat body */
+        .body {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 60px;
+            background-color: black;
+            border-radius: 100px 100px 80px 80px;
+            z-index: 1; /* Ensures body is below the whiskers */
+        }
+
+        /* Cat head */
+        .head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background-color: black;
+            border-radius: 50%;
+            z-index: 2; /* Above body */
+        }
+
+        /* Cat eyes (X-shaped) */
+        .eye {
+            position: absolute;
+            top: 25px;
+            width: 16px;
+            height: 16px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            transform: translateX(-50%);
+        }
+
+        .eye.left {
+            left: 30px;
+        }
+
+        .eye.right {
+            right: 15px;
+        }
+
+        .eye::before {
+            content: "X";
+            display: block;
+            text-align: center;
+        }
+
+        /* Cat ears */
+        .ear {
+            position: absolute;
+            top: -10px;
+            width: 30px;
+            height: 30px;
+            background-color: black;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            z-index: 3; /* Above head */
+        }
+
+        .ear.left {
+            left: 25px;
+        }
+
+        .ear.right {
+            right: 25px;
+        }
+
+        /* Cat nose */
+        .nose {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: pink;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 5; /* Above mouth */
+        }
+
+        /* Cat whiskers */
+        .whisker {
+            position: absolute;
+            top: 55px;
+            width: 50px;
+            height: 2px;
+            background-color: white;
+            z-index: 10; /* Ensure whiskers are above the body */
+        }
+
+        .whisker.left {
+            left: -15px;
+        }
+
+        .whisker.right {
+            right: -15px;
+        }
+
+        .whisker.left-2 {
+            top: 50px;
+            left: -25px;
+            transform: rotate(10deg);
+            width: 60px;
+            z-index: 10; /* Ensure whiskers are above the body */
+        }
+
+        .whisker.right-2 {
+            top: 50px;
+            right: -23px;
+            transform: rotate(-5deg);
+            width: 60px;
+            z-index: 10; /* Ensure whiskers are above the body */
+        }
+
+        .whisker.left-3 {
+            top: 60px;
+            left: -35px;
+            transform: rotate(-10deg);
+            width: 70px;
+            z-index: 10; /* Ensure whiskers are above the body */
+        }
+
+        .whisker.right-3 {
+            top: 60px;
+            right: -15px;
+            transform: rotate(15deg);
+            width: 50px;
+            z-index: 10; /* Ensure whiskers are above the body */
+        }
+
+        /* Cat mouth */
+        .mouth {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            width: 20px;
+            height: 10px;
+            border: 2px solid black;
+            border-top: none;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 5; /* Above nose */
+        }
+
+        /* Tail */
+        .tail {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            width: 70px;
+            height: 30px;
+            background-color: black;
+            border-radius: 50%;
+            transform-origin: 0 50%;
+            animation: none; /* Initially, no tail wagging */
+            transition: transform 0.5s ease-in-out;
+        }
+
+        /* Tail wagging animation */
+        @keyframes tail-wag {
+            0% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(20deg);
+            }
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* Pet the cat button */
+        .pet-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .pet-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Cute purr text box */
+        .purr-text {
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: #f2a1a1;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            margin: auto;
+            margin-top: 20px;
+            max-width: 200px;
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Gravestone Emoji */
+        .gravestone {
+            font-size: 50px;
+            text-align: center;
+            display: none; /* Initially hidden */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>YETI, set, go!</h1>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav>
+        <a href="javascript:void(0);" onclick="showTab('home')">Home</a>
+        <a href="javascript:void(0);" onclick="showTab('brainBreak')">Brain Break</a>
+        <a href="javascript:void(0);" onclick="showTab('focus')">Focus</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Home Tab Content -->
+        <div id="home" class="tab-content active">
+            <h2>At a glance</h2>
+
+            <div class="block">
+            <h2>Upcoming department events</h2>
+            <!-- Embed UTK Physics & Astronomy Calendar -->
+            <iframe src="https://physics.utk.edu/news-events/events/" 
+                    frameborder="0" scrolling="yes"></iframe>
+        </div>
+        
+        <!-- Parking Updates (embedded iframe) -->
+            <div class="block">
+                <h3>Driving to campus? Here's where to park:</h3>
+                <iframe src="https://utk.mpark.io/5103" frameborder="0"></iframe>
+            </div>
+        
+   </div>
+        
+
+        <!-- Brain Break Tab Content -->
+        <div id="brainBreak" class="tab-content">
+            <h2>Brain Break</h2>
+            <p>Deadlines stressing you out? Reviewer #2 ruin your day? Take a break!</p>
+
+            <!-- Interactive Cat -->
+            <div class="cat">
+                <div class="body"></div>
+                <div class="head">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                </div>
+                <div class="ear left"></div>
+                <div class="ear right"></div>
+                <div class="nose"></div>
+                <div class="whisker left"></div>
+                <div class="whisker right"></div>
+                <div class="whisker left-2"></div>
+                <div class="whisker right-2"></div>
+                <div class="whisker left-3"></div>
+                <div class="whisker right-3"></div>
+                <div class="mouth"></div>
+                <div class="tail"></div>
+            </div>
+            <!-- Gravestone Emoji for Dead Cat -->
+            <div class="gravestone">🪦</div>
+            <button class="pet-button" onclick="petCat()">Pet Schrödinger's cat!</button>
+            <div class="purr-text">I'm alive! Purr...</div>
+        </div>
+        
+<!-- Focus Tab Content (New Countdown Timer) -->
+        <div id="focus" class="tab-content">
+            <h2>Focus Timer</h2>
+
+            <!-- Countdown Timer -->
+            <div class="timer-container">
+                <h1>Focus Timer</h1>
+
+                <!-- Circular Countdown Display -->
+                <div class="circle">
+                    <div class="background"></div>
+                    <div class="progress" id="progress"></div>
+                </div>
+
+                <div class="timer-display" id="timerDisplay">00:00</div>
+
+                <div class="time-inputs">
+                    <label for="timeSelect">Select Time: </label>
+                    <select id="timeSelect">
+                        <option value="300">5 minutes</option>
+                        <option value="900">15 minutes</option>
+                        <option value="1800">30 minutes</option>
+                    </select>
+                </div>
+
+                <div class="time-inputs">
+                    <label for="timeInput">Or set your own time (in seconds): </label>
+                    <input type="number" id="timeInput" class="time-input" placeholder="Enter seconds" min="1" />
+                </div>
+
+                <div class="timer-controls">
+                    <button id="startBtn">Start</button>
+                    <button id="pauseBtn" disabled>Pause</button>
+                    <button id="resetBtn">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to switch between tabs
+        function showTab(tabName) {
+            // Hide all tab content
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show the clicked tab content
+            document.getElementById(tabName).classList.add('active');
+        }
+
+
+		// Countdown Timer
+        let timerInterval;
+        let totalTime = 300; // Default time (5 minutes)
+        let remainingTime = totalTime;
+        let isRunning = false;
+        const progressElement = document.getElementById('progress');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const timeInput = document.getElementById('timeInput');
+        const timeSelect = document.getElementById('timeSelect');
+
+        // Function to start the timer
+        function startTimer() {
+            if (isRunning) return; // Prevent multiple starts
+
+            isRunning = true;
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            resetBtn.disabled = false;
+
+            timerInterval = setInterval(() => {
+                remainingTime--;
+                updateDisplay();
+                updateProgress();
+
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    startBtn.disabled = false;
+                    pauseBtn.disabled = true;
+                    alert('Time is up!');
+                }
+            }, 1000);
+        }
+
+        // Function to pause the timer
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+
+        // Function to reset the timer
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            remainingTime = totalTime;
+            timerDisplay.textContent = '00:00';
+            progressElement.style.background = 'conic-gradient(#4caf50 0%, #4caf50 0%, transparent 0% 100%)';
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            resetBtn.disabled = true;
+        }
+
+        // Function to update the timer display (in minutes:seconds format)
+        function updateDisplay() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Function to update the circular progress (fill up based on remaining time)
+        function updateProgress() {
+            const percentage = ((totalTime - remainingTime) / totalTime) * 100;
+            progressElement.style.background = `conic-gradient(#4caf50 ${percentage}%, #ddd ${percentage}% 100%)`;
+        }
+
+        // Function to set the timer based on user input or selection
+        function setTimer() {
+            const userTime = parseInt(timeInput.value);
+            if (isNaN(userTime) || userTime <= 0) {
+                const selectedTime = parseInt(timeSelect.value);
+                totalTime = selectedTime;
+                remainingTime = selectedTime;
+            } else {
+                totalTime = userTime;
+                remainingTime = userTime;
+            }
+            resetTimer();
+        }
+
+        // Event Listeners
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        timeInput.addEventListener('change', setTimer);
+        timeSelect.addEventListener('change', setTimer);
+        // Interactive Cat behavior
+        let isCatDead = Math.random() < 0.25;  // 25% chance for the cat to be dead (i'm breaking physics rules here)
+
+        const cat = document.querySelector('.cat');
+        const tail = document.querySelector('.tail');
+        const leftEye = document.querySelector('.eye.left');
+        const rightEye = document.querySelector('.eye.right');
+        const purrText = document.querySelector('.purr-text');
+        const gravestone = document.querySelector('.gravestone');
+        
+
+        // Function to handle petting the cat
+        function petCat() {
+            // If the cat is dead
+            if (isCatDead) {
+                // Show the gravestone
+                gravestone.style.display = "block";
+
+                // Hide the cat body and tail
+                cat.style.display = "none";
+
+                // Hide the purring text
+                purrText.style.display = "none";
+            } else {
+                // Hide the gravestone
+                gravestone.style.display = "none";
+
+                // Show the cat body and tail
+                cat.style.display = "block";
+
+                // Make the tail wag
+                tail.style.animation = "tail-wag 0.5s ease-in-out infinite";
+
+                // Hide the eyes
+                leftEye.style.display = "none";
+                rightEye.style.display = "none";
+
+                // Show the purring text
+                purrText.style.display = "block";
+            }
+        }
+       
+        
+    </script>
+
+</body>
+</html>
